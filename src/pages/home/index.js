@@ -10,22 +10,21 @@ import Pagination from '@material-ui/lab/Pagination';
 import FilledInput from '@material-ui/core/FilledInput';
 
 import ShoppingCart from '../../components/shopping_cart';
+import PokemonList from '../../components/pokemon_list';
 import * as PokemonReducer from '../../store/ducks/pokemon';
 
 const Home = () => {
   const dispatch = useDispatch();
 
-  const { pokemons, pagination } = useSelector((state) => state.pokemon);
+  const { pokemon, pagination } = useSelector((state) => state.poke);
 
   const handleChangePagination = (event, page) => {
     const offset = pagination.limit * (page - 1);
 
-    const newPagination = {
-      ...pagination,
-      offset,
-    };
+    const newPagination = pagination;
+    newPagination.offset = offset;
 
-
+    dispatch(PokemonReducer.fetchPokemonRequest(pagination));
   };
 
   /**
@@ -57,11 +56,22 @@ const Home = () => {
         </Grid>
 
         <Grid item xs={12} sm={8}>
-          <div>Content</div>
+          <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+            {Boolean(pokemon) &&
+              pokemon.map((aPokemon, index) => (
+                <PokemonList key={index} aPokemon={aPokemon} />
+              ))}
+          </div>
 
-          <Grid container justify="center" item xs={12}>
+          <Grid
+            container
+            justify="center"
+            item
+            xs={12}
+            style={{ marginTop: '20px' }}
+          >
             <Pagination
-              count={pagination.count || 1}
+              count={Number.parseInt(pagination.count / pagination.limit) || 0}
               color="primary"
               variant="outlined"
               shape="rounded"

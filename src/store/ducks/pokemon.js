@@ -5,16 +5,11 @@ export const FETCH_POKEMON_REQUEST = '@pokemon/FETCH_POKEMON_REQUEST';
 export const FETCH_POKEMON_SUCCESS = '@pokemon/FETCH_POKEMON_SUCCESS';
 export const FETCH_POKEMON_FAIL = '@pokemon/FETCH_POKEMON_FAIL';
 
-export const FETCH_NEXT_POKEMON_REQUEST = '@pokemon/FETCH_NEXT_POKEMON_REQUEST';
-export const FETCH_NEXT_POKEMON_SUCCESS = '@pokemon/FETCH_NEXT_POKEMON_SUCCESS';
-export const FETCH_NEXT_POKEMON_FAIL = '@pokemon/FETCH_NEXT_POKEMON_FAIL';
-
-export const FETCH_PREVIOUS_POKEMON_REQUEST =
-  '@pokemon/FETCH_PREVIOUS_POKEMON_REQUEST';
-export const FETCH_PREVIOUS_POKEMON_SUCCESS =
-  '@pokemon/FETCH_PREVIOUS_POKEMON_SUCCESS';
-export const FETCH_PREVIOUS_POKEMON_FAIL =
-  '@pokemon/FETCH_PREVIOUS_POKEMON_FAIL';
+export const FETCH_POKEMON_DETAILS_REQUEST =
+  '@pokemon/FETCH_POKEMON_DETAILS_REQUEST';
+export const FETCH_POKEMON_DETAILS_SUCCESS =
+  '@pokemon/FETCH_POKEMON_DETAILS_SUCCESS';
+export const FETCH_POKEMON_DETAILS_FAIL = '@pokemon/FETCH_POKEMON_DETAILS_FAIL';
 
 /**
  * Action Creators
@@ -40,44 +35,23 @@ export const fetchPokemonFail = (error) => {
   };
 };
 
-export const fetchNextPokemonRequest = (next) => {
+export const fetchPokemonDetailsRequest = (responseFromFetchPokemon) => {
   return {
-    type: FETCH_NEXT_POKEMON_REQUEST,
-    next,
+    type: FETCH_POKEMON_DETAILS_REQUEST,
+    responseFromFetchPokemon,
   };
 };
 
-export const fetchNextPokemonSuccess = (response) => {
+export const fetchPokemonDetailsSuccess = (response) => {
   return {
-    type: FETCH_NEXT_POKEMON_SUCCESS,
+    type: FETCH_POKEMON_DETAILS_SUCCESS,
     response,
   };
 };
 
-export const fetchNextPokemonFail = (error) => {
+export const fetchPokemonDetailsFail = (error) => {
   return {
-    type: FETCH_NEXT_POKEMON_FAIL,
-    error,
-  };
-};
-
-export const fetchPreviousPokemonRequest = (previous) => {
-  return {
-    type: FETCH_PREVIOUS_POKEMON_REQUEST,
-    previous,
-  };
-};
-
-export const fetchPreviousPokemonSuccess = (response) => {
-  return {
-    type: FETCH_PREVIOUS_POKEMON_SUCCESS,
-    response,
-  };
-};
-
-export const fetchPreviousPokemonFail = (error) => {
-  return {
-    type: FETCH_PREVIOUS_POKEMON_FAIL,
+    type: FETCH_POKEMON_DETAILS_FAIL,
     error,
   };
 };
@@ -86,9 +60,9 @@ export const fetchPreviousPokemonFail = (error) => {
  * Reducer
  * */
 const INITIAL_STATE = {
-  pokemons: [],
+  pokemon: [],
   pagination: {
-    limit: 20,
+    limit: 16,
     offset: 0,
     next: '',
     previous: '',
@@ -98,14 +72,13 @@ const INITIAL_STATE = {
   response: null,
 };
 
-export const pokemon = (state = INITIAL_STATE, action) => {
+export const poke = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case FETCH_POKEMON_SUCCESS: {
-      const { results, next, previous, count } = action.response.data;
+      const { next, previous, count } = action.response.data;
 
       return {
         ...state,
-        pokemons: results,
         pagination: {
           ...state.pagination,
           next,
@@ -123,51 +96,15 @@ export const pokemon = (state = INITIAL_STATE, action) => {
         response: null,
       };
 
-    case FETCH_NEXT_POKEMON_SUCCESS: {
-      const { results, next, previous, count } = action.response.data;
+    case FETCH_POKEMON_DETAILS_SUCCESS: {
+      const pokemonDetails = action.response.map((responses) => responses.data);
 
       return {
         ...state,
-        pokemons: results,
-        pagination: {
-          ...state.pagination,
-          next,
-          previous: previous === null ? '' : previous,
-          count,
-        },
-        response: action.response,
+        pokemon: pokemonDetails,
+        error: null,
       };
     }
-
-    case FETCH_NEXT_POKEMON_FAIL:
-      return {
-        ...state,
-        error: action.error,
-        response: null,
-      };
-
-    case FETCH_PREVIOUS_POKEMON_SUCCESS: {
-      const { results, next, previous, count } = action.response.data;
-
-      return {
-        ...state,
-        pokemons: results,
-        pagination: {
-          ...state.pagination,
-          next,
-          previous: previous === null ? '' : previous,
-          count,
-        },
-        response: action.response,
-      };
-    }
-
-    case FETCH_PREVIOUS_POKEMON_FAIL:
-      return {
-        ...state,
-        error: action.error,
-        response: null,
-      };
 
     default:
       return state;

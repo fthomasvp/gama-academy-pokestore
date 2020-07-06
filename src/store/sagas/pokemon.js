@@ -16,50 +16,34 @@ export function* fetchPokemon(action) {
 
     if (response && response.status === 200) {
       yield put(PokemonReducer.fetchPokemonSuccess(response));
+      yield put(PokemonReducer.fetchPokemonDetailsRequest(response));
     }
   } catch (error) {
     yield put(PokemonReducer.fetchPokemonFail(error.response || error));
   }
 }
 
-export function* fetchNextPokemon(action) {
-  const { pagination } = action;
+export function* fetchPokemonDetails(action) {
+  const { results } = action.responseFromFetchPokemon.data;
 
-  // String that contains the next data to be fetched from API
-  const { next } = pagination;
+  const pokemonNames = results.map((pokemon) => pokemon.name);
 
-  try {
-    const response = yield call(POKE_API.get, next);
-
-    if (response && response.status === 200) {
-      yield put(PokemonReducer.fetchNextPokemonSuccess(response));
-    }
-  } catch (error) {
-    yield put(PokemonReducer.fetchNextPokemonFail(error.response || error));
-  }
-}
-
-export function* fetchPreviousPokemon(action) {
-  const { pagination } = action;
-
-  const { previous } = pagination;
+  const axiosRequests = pokemonNames.map((name) =>
+    POKE_API.get(`pokemon/${name}`)
+  );
 
   try {
-    const response = yield call(POKE_API.get, previous);
+    const response = yield all(axiosRequests);
 
-    if (response && response.status === 200) {
-      yield put(PokemonReducer.fetchPreviousPokemonSuccess(response));
+    if (response && response[0].status === 200) {
+      yield put(PokemonReducer.fetchPokemonDetailsSuccess(response));
     }
   } catch (error) {
-    yield put(PokemonReducer.fetchPreviousPokemonFail(error.response || error));
+    yield put(PokemonReducer.fetchPokemonDetailsFail(error.response || error));
   }
 }
 
 export default all([
   takeLatest(PokemonReducer.FETCH_POKEMON_REQUEST, fetchPokemon),
-  takeLatest(PokemonReducer.FETCH_NEXT_POKEMON_REQUEST, fetchNextPokemon),
-  takeLatest(
-    PokemonReducer.FETCH_PREVIOUS_POKEMON_REQUEST,
-    fetchPreviousPokemon
-  ),
+  takeLatest(PokemonReducer.FETCH_POKEMON_DETAILS_REQUEST, fetchPokemonDetails),
 ]);
