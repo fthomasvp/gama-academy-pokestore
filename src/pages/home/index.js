@@ -15,19 +15,25 @@ import * as PokemonReducer from '../../store/ducks/pokemon';
 const Home = () => {
   const dispatch = useDispatch();
 
-  const { pokemon, pagination, error, response } = useSelector(
-    (state) => state.shoppingCart
-  );
+  const { pokemons, pagination } = useSelector((state) => state.pokemon);
 
-  console.log('Pokemons:', pokemon);
-  console.log('Response:', response);
+  const handleChangePagination = (event, page) => {
+    const offset = pagination.limit * (page - 1);
+
+    const newPagination = {
+      ...pagination,
+      offset,
+    };
+
+
+  };
 
   /**
    * Effects
    */
   useEffect(() => {
     dispatch(PokemonReducer.fetchPokemonRequest(pagination));
-  }, [dispatch, pagination]);
+  }, []);
 
   return (
     <Container maxWidth="xl">
@@ -55,10 +61,11 @@ const Home = () => {
 
           <Grid container justify="center" item xs={12}>
             <Pagination
-              count={10}
+              count={pagination.count || 1}
               color="primary"
               variant="outlined"
               shape="rounded"
+              onChange={handleChangePagination}
             />
           </Grid>
         </Grid>

@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 
-import { shoppingCart } from './pokemon';
+import { pokemon } from './pokemon';
 
 export default combineReducers({
-  shoppingCart,
+  pokemon,
 });
