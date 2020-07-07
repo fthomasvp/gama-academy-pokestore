@@ -43,7 +43,7 @@ Suba o repositório no GitHub e sugerimos o Netlify para hospedagem."
 
 ## Go to Page
 
-[Clique para ver o resultado](https://fthomasvp.github.io/)
+[Clique para ver o resultado](https://apokemonstore.netlify.app/)
 
 
 # Made with create-react-app
