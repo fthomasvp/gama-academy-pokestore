@@ -42,7 +42,7 @@ const Home = () => {
             autoFocus
             fullWidth
             color="primary"
-            placeholder="Pesquise um Pokemon..."
+            placeholder="Pesquise um Pokémon..."
             startAdornment={
               <InputAdornment position="start">
                 <IconButton aria-label="search pokemon">
@@ -55,7 +55,7 @@ const Home = () => {
           />
         </Grid>
 
-        <Grid item xs={12} sm={8}>
+        <Grid item xs={12} sm={9}>
           <div style={{ display: 'flex', flexWrap: 'wrap' }}>
             {Boolean(pokemon) &&
               pokemon.map((aPokemon, index) => (
@@ -80,7 +80,7 @@ const Home = () => {
           </Grid>
         </Grid>
 
-        <Grid item xs={12} sm={4}>
+        <Grid item xs={12} sm={3}>
           <ShoppingCart />
         </Grid>
       </Grid>

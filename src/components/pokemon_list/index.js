@@ -1,4 +1,6 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import IconButton from '@material-ui/core/IconButton';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
@@ -11,9 +13,21 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
 import { useStyles } from './styles';
+import * as PokemonReducer from '../../store/ducks/pokemon';
 
 const PokemonList = ({ aPokemon }) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+
+  const addPokemonToShoppingCart = () => {
+    const pokemonToAdd = {
+      name: aPokemon.name.toUpperCase(),
+      price: aPokemon.order,
+      image: aPokemon.sprites.front_default,
+    };
+
+    dispatch(PokemonReducer.addPokemonToShoppingCart(pokemonToAdd));
+  };
 
   return (
     <Card
@@ -31,9 +45,6 @@ const PokemonList = ({ aPokemon }) => {
           <Typography gutterBottom variant="h5" component="h2">
             {aPokemon.name.toUpperCase()}
           </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
-            Alguma descrição relevante do Pokémon
-          </Typography>
         </CardContent>
       </CardActionArea>
 
@@ -41,12 +52,16 @@ const PokemonList = ({ aPokemon }) => {
         <Button size="medium" color="primary">
           Saiba mais
         </Button>
-        <IconButton>
+        <IconButton onClick={addPokemonToShoppingCart}>
           <AddShoppingCartIcon color="primary" fontSize="large" />
         </IconButton>
       </CardActions>
     </Card>
   );
+};
+
+PokemonList.propTypes = {
+  aPokemon: PropTypes.object.isRequired,
 };
 
 export default PokemonList;
