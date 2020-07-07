@@ -17,6 +17,8 @@ export const ADD_POKEMON_TO_SHOPPING_CART =
 export const REMOVE_POKEMON_FROM_SHOPPING_CART =
   '@pokemon/REMOVE_POKEMON_FROM_SHOPPING_CART';
 
+export const UDPATE_ACTUAL_PAGE = '@pokemon/UDPATE_ACTUAL_PAGE';
+
 /**
  * Action Creators
  * */
@@ -76,6 +78,13 @@ export const removePokemonFromShoppingCart = (pokemon) => {
   };
 };
 
+export const updateActualPage = (page) => {
+  return {
+    type: UDPATE_ACTUAL_PAGE,
+    page,
+  };
+};
+
 /**
  * Reducer
  * */
@@ -86,6 +95,7 @@ const INITIAL_STATE = {
   pagination: {
     limit: 20,
     offset: 0,
+    actualPage: 1,
     next: '',
     previous: '',
     count: 0,
@@ -141,7 +151,6 @@ export const poke = (state = INITIAL_STATE, action) => {
         newShoppingCart = state.shoppingCart.map((item) => {
           if (item.name === pokemon.name) {
             item.amount = item.amount + 1;
-            item.lastUpdate = Date.now();
           }
 
           return item;
@@ -186,6 +195,16 @@ export const poke = (state = INITIAL_STATE, action) => {
         ...state,
         shoppingCart: newShoppingCart,
         totalValue: state.totalValue - pokemon.price,
+      };
+    }
+
+    case UDPATE_ACTUAL_PAGE: {
+      return {
+        ...state,
+        pagination: {
+          ...state.pagination,
+          actualPage: action.page,
+        },
       };
     }
 

@@ -16,6 +16,7 @@ import IconButton from '@material-ui/core/IconButton';
 import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
 import Badge from '@material-ui/core/Badge';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
+import Button from '@material-ui/core/Button';
 
 import * as PokemonReducer from '../../store/ducks/pokemon';
 
@@ -77,7 +78,10 @@ const ShoppingCart = () => {
                     onClick={() => removeItem(item)}
                     disabled={!item.amount}
                   >
-                    <RemoveCircleOutlineIcon color="primary" fontSize="large" />
+                    <RemoveCircleOutlineIcon
+                      color="secondary"
+                      fontSize="large"
+                    />
                   </IconButton>
                   <IconButton edge="end" onClick={() => addItem(item)}>
                     <AddCircleOutlineIcon color="primary" fontSize="large" />
@@ -87,11 +91,18 @@ const ShoppingCart = () => {
             </List>
           ))
         ) : (
-          <Typography color="primary" variant="button">
-            O carrinho está limpo
-          </Typography>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              marginBottom: '10px',
+            }}
+          >
+            <Typography variant="button">O carrinho está limpo</Typography>
+          </div>
         )}
       </div>
+
       <div>
         <Paper>
           <div
@@ -99,6 +110,7 @@ const ShoppingCart = () => {
               display: 'flex',
               justifyContent: 'space-around',
               padding: '15px',
+              background: 'gold',
             }}
           >
             <div
@@ -111,12 +123,19 @@ const ShoppingCart = () => {
                 Total
               </Typography>
             </div>
+
             <div>
               <Typography color="primary" variant="h5">
                 {`R$ ${totalValue}`}
               </Typography>
             </div>
           </div>
+
+          {shoppingCart.length > 0 && (
+            <Button fullWidth color="primary" variant="contained">
+              Finalizar
+            </Button>
+          )}
         </Paper>
       </div>
     </Paper>

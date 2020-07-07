@@ -1,9 +1,10 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import IconButton from '@material-ui/core/IconButton';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
@@ -18,6 +19,8 @@ import * as PokemonReducer from '../../store/ducks/pokemon';
 const PokemonList = ({ aPokemon }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
+
+  const { shoppingCart } = useSelector((state) => state.poke);
 
   const addPokemonToShoppingCart = () => {
     const pokemonToAdd = {
@@ -49,11 +52,26 @@ const PokemonList = ({ aPokemon }) => {
       </CardActionArea>
 
       <CardActions style={{ justifyContent: 'space-between' }}>
-        <Button size="medium" color="primary">
+        <Button size="medium" color="primary" variant="outlined">
           Saiba mais
         </Button>
-        <IconButton onClick={addPokemonToShoppingCart}>
-          <AddShoppingCartIcon color="primary" fontSize="large" />
+        <IconButton
+          onClick={addPokemonToShoppingCart}
+          disabled={Boolean(
+            shoppingCart &&
+              shoppingCart.find(
+                (item) => item.name === aPokemon.name.toUpperCase()
+              )
+          )}
+        >
+          {shoppingCart &&
+          shoppingCart.find(
+            (item) => item.name === aPokemon.name.toUpperCase()
+          ) ? (
+            <CheckCircleIcon color="primary" fontSize="large" />
+          ) : (
+            <AddShoppingCartIcon color="primary" fontSize="large" />
+          )}
         </IconButton>
       </CardActions>
     </Card>

@@ -25,6 +25,7 @@ const Home = () => {
     newPagination.offset = offset;
 
     dispatch(PokemonReducer.fetchPokemonRequest(pagination));
+    dispatch(PokemonReducer.updateActualPage(page));
   };
 
   /**
@@ -72,6 +73,7 @@ const Home = () => {
           >
             <Pagination
               count={Number.parseInt(pagination.count / pagination.limit) || 0}
+              page={pagination.actualPage}
               color="primary"
               variant="outlined"
               shape="rounded"
