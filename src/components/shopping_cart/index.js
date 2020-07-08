@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Paper from '@material-ui/core/Paper';
@@ -17,6 +17,10 @@ import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
 import Badge from '@material-ui/core/Badge';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import Button from '@material-ui/core/Button';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Dialog from '@material-ui/core/Dialog';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import DialogContent from '@material-ui/core/DialogContent';
 
 import * as PokemonReducer from '../../store/ducks/pokemon';
 
@@ -24,6 +28,8 @@ const ShoppingCart = () => {
   const dispatch = useDispatch();
 
   const { shoppingCart, totalValue } = useSelector((state) => state.poke);
+
+  const [open, setOpen] = useState(false);
 
   const addItem = (item) => {
     const pokemonToAdd = {
@@ -43,6 +49,18 @@ const ShoppingCart = () => {
     };
 
     dispatch(PokemonReducer.removePokemonFromShoppingCart(pokemonToRemove));
+  };
+
+  const handleOpenDialogFinishShopping = () => {
+    setOpen(true);
+  };
+
+  const handleCloseDialogFinishShopping = () => setOpen(false);
+
+  const clearShoppingCart = () => {
+    dispatch(PokemonReducer.clearShoppingCart());
+
+    handleCloseDialogFinishShopping();
   };
 
   return (
@@ -132,12 +150,54 @@ const ShoppingCart = () => {
           </div>
 
           {shoppingCart.length > 0 && (
-            <Button fullWidth color="primary" variant="contained">
+            <Button
+              fullWidth
+              color="primary"
+              variant="contained"
+              onClick={handleOpenDialogFinishShopping}
+            >
               Finalizar
             </Button>
           )}
         </Paper>
       </div>
+
+      <Dialog
+        open={open}
+        onClose={handleCloseDialogFinishShopping}
+        onBackdropClick={handleCloseDialogFinishShopping}
+        aria-labelledby="congratulations-dialog-title"
+        maxWidth="xs"
+        fullWidth
+      >
+        <DialogTitle id="congratulations-dialog-title">Parabéns!</DialogTitle>
+        <DialogContent>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              marginBottom: '15px',
+            }}
+          >
+            <CheckCircleIcon color="primary" fontSize="large" />
+          </div>
+          <Typography
+            color="primary"
+            align="center"
+            style={{ marginBottom: '15px' }}
+          >
+            {'Sua compra foi realizada com sucesso :)'}
+          </Typography>
+          <Button
+            fullWidth
+            color="primary"
+            variant="contained"
+            onClick={clearShoppingCart}
+          >
+            OK
+          </Button>
+        </DialogContent>
+      </Dialog>
     </Paper>
   );
 };
