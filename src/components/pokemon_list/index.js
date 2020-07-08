@@ -48,6 +48,9 @@ const PokemonList = ({ aPokemon }) => {
           <Typography gutterBottom variant="h5" component="h2">
             {aPokemon.name.toUpperCase()}
           </Typography>
+          <Typography variant="body2" color="textSecondary" component="p">
+            R$ {aPokemon.order}
+          </Typography>
         </CardContent>
       </CardActionArea>
 
