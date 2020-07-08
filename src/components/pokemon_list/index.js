@@ -46,7 +46,7 @@ const PokemonList = ({ aPokemon }) => {
 
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">
-            {aPokemon.name.toUpperCase()}
+            {aPokemon.name}
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
             R$ {aPokemon.order}
