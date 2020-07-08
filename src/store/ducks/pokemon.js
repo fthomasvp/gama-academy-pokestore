@@ -21,6 +21,12 @@ export const UDPATE_ACTUAL_PAGE = '@pokemon/UDPATE_ACTUAL_PAGE';
 
 export const CLEAR_SHOPPING_CART = '@pokemon/CLEAR_SHOPPING_CART';
 
+export const SEARCH_POKEMON_REQUEST = '@pokemon/SEARCH_POKEMON_REQUEST';
+export const SEARCH_POKEMON_SUCCESS = '@pokemon/SEARCH_POKEMON_SUCCESS';
+export const SEARCH_POKEMON_FAIL = '@pokemon/SEARCH_POKEMON_FAIL';
+
+export const CLEAR_SNACKBAR = '@pokemon/CLEAR_SNACKBAR';
+
 /**
  * Action Creators
  * */
@@ -93,6 +99,33 @@ export const clearShoppingCart = () => {
   };
 };
 
+export const searchPokemonRequest = (pokemonToSearch) => {
+  return {
+    type: SEARCH_POKEMON_REQUEST,
+    pokemonToSearch,
+  };
+};
+
+export const searchPokemonSuccess = (response) => {
+  return {
+    type: SEARCH_POKEMON_SUCCESS,
+    response,
+  };
+};
+
+export const searchPokemonFail = (error) => {
+  return {
+    type: SEARCH_POKEMON_FAIL,
+    error,
+  };
+};
+
+export const clearSnackbar = () => {
+  return {
+    type: CLEAR_SNACKBAR,
+  };
+};
+
 /**
  * Reducer
  * */
@@ -126,6 +159,7 @@ export const poke = (state = INITIAL_STATE, action) => {
           count,
         },
         response: action.response,
+        error: INITIAL_STATE.error,
       };
     }
 
@@ -133,7 +167,7 @@ export const poke = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         error: action.error,
-        response: null,
+        response: INITIAL_STATE.response,
       };
 
     case FETCH_POKEMON_DETAILS_SUCCESS: {
@@ -142,7 +176,7 @@ export const poke = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         pokemon: pokemonDetails,
-        error: null,
+        error: INITIAL_STATE.error,
       };
     }
 
@@ -220,6 +254,31 @@ export const poke = (state = INITIAL_STATE, action) => {
         ...state,
         shoppingCart: INITIAL_STATE.shoppingCart,
         totalValue: INITIAL_STATE.totalValue,
+      };
+
+    case SEARCH_POKEMON_SUCCESS: {
+      const pokemon = action.response.data;
+
+      return {
+        ...state,
+        pokemon: [pokemon],
+        response: action.response,
+        error: INITIAL_STATE.error,
+      };
+    }
+
+    case SEARCH_POKEMON_FAIL:
+      return {
+        ...state,
+        error: action.error,
+        response: INITIAL_STATE.response,
+      };
+
+    case CLEAR_SNACKBAR:
+      return {
+        ...state,
+        error: INITIAL_STATE.response,
+        response: INITIAL_STATE.response,
       };
 
     default:

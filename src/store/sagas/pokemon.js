@@ -43,7 +43,22 @@ export function* fetchPokemonDetails(action) {
   }
 }
 
+export function* searchPokemon(action) {
+  const { pokemonToSearch } = action;
+
+  try {
+    const response = yield call(POKE_API.get, `pokemon/${pokemonToSearch}`);
+
+    if (response && response.status === 200) {
+      yield put(PokemonReducer.searchPokemonSuccess(response));
+    }
+  } catch (error) {
+    yield put(PokemonReducer.searchPokemonFail(error.response || error));
+  }
+}
+
 export default all([
   takeLatest(PokemonReducer.FETCH_POKEMON_REQUEST, fetchPokemon),
   takeLatest(PokemonReducer.FETCH_POKEMON_DETAILS_REQUEST, fetchPokemonDetails),
+  takeLatest(PokemonReducer.SEARCH_POKEMON_REQUEST, searchPokemon),
 ]);
