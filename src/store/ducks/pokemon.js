@@ -19,6 +19,8 @@ export const REMOVE_POKEMON_FROM_SHOPPING_CART =
 
 export const UDPATE_ACTUAL_PAGE = '@pokemon/UDPATE_ACTUAL_PAGE';
 
+export const CLEAR_SHOPPING_CART = '@pokemon/CLEAR_SHOPPING_CART';
+
 /**
  * Action Creators
  * */
@@ -82,6 +84,12 @@ export const updateActualPage = (page) => {
   return {
     type: UDPATE_ACTUAL_PAGE,
     page,
+  };
+};
+
+export const clearShoppingCart = () => {
+  return {
+    type: CLEAR_SHOPPING_CART,
   };
 };
 
@@ -198,7 +206,7 @@ export const poke = (state = INITIAL_STATE, action) => {
       };
     }
 
-    case UDPATE_ACTUAL_PAGE: {
+    case UDPATE_ACTUAL_PAGE:
       return {
         ...state,
         pagination: {
@@ -206,7 +214,13 @@ export const poke = (state = INITIAL_STATE, action) => {
           actualPage: action.page,
         },
       };
-    }
+
+    case CLEAR_SHOPPING_CART:
+      return {
+        ...state,
+        shoppingCart: INITIAL_STATE.shoppingCart,
+        totalValue: INITIAL_STATE.totalValue,
+      };
 
     default:
       return state;
